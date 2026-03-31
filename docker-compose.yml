@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: simple-bank-db
+    environment:
+      POSTGRES_USER: bankuser
+      POSTGRES_PASSWORD: securepassword123
+      POSTGRES_DB: simplebank
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  app:
+    image: ghcr.io/roygicheru/simple-bank:latest
+    container_name: simple-bank-app
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/simplebank
+      SPRING_DATASOURCE_USERNAME: bankuser
+      SPRING_DATASOURCE_PASSWORD: securepassword123
+    restart: always
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: simple-bank-tunnel
+    restart: always
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiOGE2YzgwMTYwNTBjOTA2ZmY0ZTkyMmNkOTZhNGQzNWQiLCJ0IjoiYjFlZmJjZWMtOTc0MS00Y2MwLWJkNTctNDEzNjczNWYzNDAwIiwicyI6Ik1ESmhObVE0TkRjdFpEWTVNQzAwWVdFd0xUZzNNemd0T1RBeFlXTmtOakEyTkRjNSJ9
+
+volumes:
+  postgres_data:
