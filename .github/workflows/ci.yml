@@ -53,8 +53,8 @@ jobs:
           # On feature branches, it builds to ensure the Dockerfile isn't broken.
           push: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/simple-bank:latest
-            ghcr.io/${{ github.repository_owner }}/simple-bank:${{ github.sha }}
+            ghcr.io/roygicheru/simple-bank:latest
+            ghcr.io/roygicheru/simple-bank:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
