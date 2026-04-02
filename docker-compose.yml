@@ -37,5 +37,22 @@ services:
     environment:
       - TUNNEL_TOKEN=eyJhIjoiOGE2YzgwMTYwNTBjOTA2ZmY0ZTkyMmNkOTZhNGQzNWQiLCJ0IjoiYjFlZmJjZWMtOTc0MS00Y2MwLWJkNTctNDEzNjczNWYzNDAwIiwicyI6Ik1ESmhObVE0TkRjdFpEWTVNQzAwWVdFd0xUZzNNemd0T1RBeFlXTmtOakEyTkRjNSJ9
 
+  influxdb:
+    image: influxdb:1.8-alpine
+    container_name: simple-bank-influxdb
+    environment:
+      - INFLUXDB_DB=system_metrics
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    restart: always
+
+  chronograf:
+    image: chronograf:alpine
+    container_name: simple-bank-chronograf
+    depends_on:
+      - influxdb
+    restart: always
+
 volumes:
   postgres_data:
+  influxdb_data:
