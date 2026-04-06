@@ -56,6 +56,9 @@ services:
   telegraf:
     image: telegraf:alpine
     container_name: simple-bank-telegraf
+    user: telegraf
+    group_add:
+      - "${DOCKER_GID:-0}"
     depends_on:
       - influxdb
     volumes:
