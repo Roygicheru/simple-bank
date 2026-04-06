@@ -1,9 +1,9 @@
 # 🏦 Simple Bank - DevOps & Platform Engineering Capstone
 
 ## 📌 Overview
-Simple Bank is a lightweight, stateless Spring Boot application serving as the core payload for a comprehensive **Internal Developer Platform (IDP)**.
+Simple Bank is a lightweight Spring Boot application serving as the core payload for a comprehensive **Internal Developer Platform (IDP)**.
 
-While the application logic is purposefully simple, the surrounding ecosystem demonstrates a professional-grade lifecycle: from **GitFlow** and **DORA-optimized CI pipelines** to **Infrastructure as Code (IaC)** and **Automated Configuration Management**.
+While the application logic is purposefully simple, the surrounding ecosystem demonstrates a professional-grade lifecycle: from **GitFlow** and **DORA-optimized CI/CD pipelines** to **Infrastructure as Code (IaC)**, **Zero Trust Networking**, and **Full-Stack Observability**.
 
 ---
 
@@ -13,14 +13,17 @@ While the application logic is purposefully simple, the surrounding ecosystem de
 * **Language:** Java 17 (Spring Boot 4.0.4)
 * **Build Tool:** Maven
 * **UI:** Thymeleaf & HTML/CSS
+* **Database:** PostgreSQL 15
 
 ### Platform & Infrastructure (The "DevOps" Layer)
 * **Cloud Provider:** Google Cloud Platform (GCP) - *Project: simple-bank-491910*
 * **Infrastructure as Code:** Terraform (Provider v5.x)
 * **Configuration Management:** Ansible
-* **Containerization:** Docker & Docker Compose
+* **Containerization:** Docker & Docker Compose V2
 * **Operating Systems:** Fedora 43 (Local) / Ubuntu 22.04 LTS (Cloud)
 * **CI/CD:** GitHub Actions (with Selenium & Trivy)
+* **Networking/Security:** Cloudflare Zero Trust Tunnels
+* **Observability (TICK Stack):** Telegraf, InfluxDB, Chronograf
 
 ---
 
@@ -36,18 +39,20 @@ This project follows a "Factory" model for deployment, ensuring that the environ
 
 ## 🚀 CI/CD Pipeline (GitHub Actions)
 
-The pipeline is engineered for **Elite DORA metrics**, achieving a rapid build-to-registry cycle.
 
-* **Continuous Integration:** Runs headless Selenium UI tests and Maven unit tests on every Pull Request to the `develop` branch.
-* **DevSecOps:** Integrates **Trivy** to scan the application container for vulnerabilities before it is published to the registry.
-* **Continuous Deployment Prep:** Automatically builds a multi-stage Docker image and pushes it to **GitHub Container Registry (GHCR)**.
+
+The pipeline is engineered for **Elite DORA metrics**, achieving a rapid build-to-registry cycle with strict separation between Integration and Deployment.
+
+* **Continuous Integration (`develop` & `main`):** Runs headless Selenium UI tests against a localized Spring Boot test server to validate frontend integrity. Executes Maven unit tests and builds a multi-stage Docker image.
+* **DevSecOps:** Integrates **Trivy** to scan the application container for vulnerabilities before it is published to **GitHub Container Registry (GHCR)**.
+* **Continuous Deployment (`main` only):** Automatically connects to the GCP server via SSH, pulls the latest GHCR images, and seamlessly restarts the Docker Compose stack without manual intervention.
 
 ---
 
 ## 📍 Project Roadmap & Progress
 
 ### ✅ Phase 1: Payload Development
-* Stateless architecture using `AtomicReference` for thread-safe in-memory banking.
+* Stateless architecture using `AtomicReference` for thread-safe in-memory banking (migrated to persistent PostgreSQL).
 
 ### ✅ Phase 2: GitFlow Implementation
 * Established `main` and `develop` branching strategy to protect production code.
@@ -64,12 +69,19 @@ The pipeline is engineered for **Elite DORA metrics**, achieving a rapid build-t
 ### ✅ Phase 6: Configuration Management
 * Used Ansible for remote server hardening, swap-file creation, and Docker orchestration.
 
-### 🕒 Phase 7: Zero Trust Deployment (In Progress)
-* Deploying the app + PostgreSQL stack via Docker Compose.
-* Implementing **Cloudflare Tunnels** for secure, port-less public access (Zero Trust).
+### ✅ Phase 7: Zero Trust Deployment
 
-### 🕒 Phase 8: Full-Stack Observability
-* Implementing the **TICK Stack** (Telegraf, InfluxDB, Chronograf) for real-time performance monitoring.
+* Deployed the app + PostgreSQL database via Docker Compose.
+* Implemented **Cloudflare Tunnels** (`cloudflared`) to expose `simplebank.icu` and `monitor.simplebank.icu` securely without opening any inbound firewall ports.
+
+### ✅ Phase 8: Full-Stack Observability
+
+* Deployed the **TICK Stack** (Telegraf, InfluxDB, Chronograf) for real-time host and container monitoring.
+* Implemented dynamic `DOCKER_GID` mapping to securely grant Telegraf read-access to the Docker daemon socket following the Principle of Least Privilege.
+
+### ✅ Phase 9: End-to-End Automated Testing & Delivery
+* Configured Selenium UI tests to run headlessly in the CI pipeline (targeting `localhost` to bypass WAF) while supporting visual, live-production testing against the Zero Trust perimeter for presentation and validation.
+* Finalized CD pipeline to trigger production updates exclusively on `main` branch merges.
 
 ---
 
