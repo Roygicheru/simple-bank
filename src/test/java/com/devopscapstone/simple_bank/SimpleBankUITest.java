@@ -44,8 +44,8 @@ public class SimpleBankUITest {
 
 	@Test
 	void testDepositAndWithdrawalUI() throws InterruptedException {
-		//driver.get("http://localhost:" + port + "/");
-		driver.get("https://simplebank.icu");
+		driver.get("http://localhost:" + port + "/");
+		//driver.get("https://simplebank.icu");
 
 		// Smart Wait: Give yourself up to 90 seconds to clear Cloudflare
 		System.out.println("Waiting for Cloudflare bypass...");
