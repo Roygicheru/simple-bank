@@ -4,7 +4,7 @@
 FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
-# Copy the Maven wrapper files first
+# Copy the Maven wrapper files
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
@@ -12,8 +12,8 @@ COPY mvnw pom.xml ./
 RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
 
-# Copy the actual source code and build the application
-# We skip tests here because our GitHub Actions pipeline already proved the tests pass!
+# Copy source code and build the application
+# Skip tests here because GitHub Actions pipeline already proved the tests pass.
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
