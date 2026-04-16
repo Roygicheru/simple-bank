@@ -48,12 +48,12 @@ resource "google_compute_instance" "app_server" {
     subnetwork = google_compute_subnetwork.simple_bank_subnet.name
 
     access_config {
-      # This block requests an ephemeral public IP so we can SSH into it
+      # This block requests an ephemeral public IP so I can SSH into it
     }
   }
 }
 
-# 5. Output the public IP so you don't have to dig through the GCP console
+# 5. Output the public IP so I don't have to dig through the GCP console
 output "server_public_ip" {
   value       = google_compute_instance.app_server.network_interface[0].access_config[0].nat_ip
   description = "The public IP address of the Simple Bank server"
